@@ -1,8 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreDocument  } from 'angularfire2/firestore';
+import { AngularFirestore,
+  AngularFirestoreCollection  } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
-import { Items } from './interfaces/items';
-import { Alerts } from './interfaces/alerts';
+
+export interface Todo {
+  id?: string;
+  name: string;
+  age: number;
+  nat: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -11,16 +17,34 @@ import { Alerts } from './interfaces/alerts';
 })
 
 export class AppComponent implements OnInit {
-  title = 'app';
-  private itemDoc: AngularFirestoreDocument<Items>;
-  items: Observable<any[]>;
-  alerts: Observable<any[]>;
+  todoCollectionRef: AngularFirestoreCollection<Todo>;
+  todo$: Observable<Todo[]>;
 
   constructor(private db: AngularFirestore) {
-    this.items = db.collection('items').valueChanges();
+      this.todoCollectionRef = this.db.collection<Todo>('items');
+      this.todo$ = this.todoCollectionRef.snapshotChanges().map(actions => {
+        return actions.map(action => {
+          const data = action.payload.doc.data() as Todo;
+          const id = action.payload.doc.id;
+          return { id, data };
+        });
+      });
+  }
+
+  addTodo(todoDesc: string) {
+    if (todoDesc && todoDesc.trim().length) {
+      this.todoCollectionRef.add({ name: todoDesc, age: 20, nat: 'De' });
+    }
+  }
+
+  updateTodo(todo: Todo) {
+    this.todoCollectionRef.doc(todo.id).update({ name: todo.name, age: todo.age, nat: todo.nat });
+  }
+
+  deleteTodo(todo: Todo) {
+    this.todoCollectionRef.doc(todo.id).delete();
   }
 
   ngOnInit() {
-    this.alerts = this.db.collection('alerts').valueChanges();
   }
 }

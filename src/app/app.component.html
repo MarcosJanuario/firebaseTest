@@ -1,5 +1,10 @@
 <ul>
-  <li class="text" *ngFor="let item of items | async">
+  <!--<li class="text" *ngFor="let item of items | async">
     {{ item.name }} - {{ item.age }} - {{ item.nat }}
+  </li>-->
+  <li *ngFor="let item of todo$ | async">
+    {{ item.data | json }} - <span (click)="deleteTodo(item)">X</span>
   </li>
 </ul>
+
+<button (click)="addTodo('marcos')">add</button>
