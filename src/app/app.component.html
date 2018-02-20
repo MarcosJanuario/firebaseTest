@@ -2,9 +2,19 @@
   <!--<li class="text" *ngFor="let item of items | async">
     {{ item.name }} - {{ item.age }} - {{ item.nat }}
   </li>-->
-  <li *ngFor="let item of todo$ | async">
+  <li *ngFor="let item of todo$ | async" (click)="edit(item)">
     {{ item.data | json }} - <span (click)="deleteTodo(item)">X</span>
   </li>
 </ul>
 
 <button (click)="addTodo('marcos')">add</button>
+
+<div *ngIf="updatingData"
+     style="position: absolute; top: 0px; left: 0px; width: 220px; height: 220px; background: lightskyblue; margin-left: 50%; margin-top: 10%">
+  <p><label for="">name:</label><input type="text" name="name" [(ngModel)]="newObj.name" ></p>
+  <p><label for="">age:</label><input type="number" name="age" [(ngModel)]="newObj.age"></p>
+  <p><label for="">nat:</label><input type="text" name="nat" [(ngModel)]="newObj.nat"></p>
+  <hr>
+  <button (click)="saveChanges(newObj)">Save</button>
+  <button (click)="close()">close</button>
+</div>

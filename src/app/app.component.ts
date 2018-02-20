@@ -19,6 +19,9 @@ export interface Todo {
 export class AppComponent implements OnInit {
   todoCollectionRef: AngularFirestoreCollection<Todo>;
   todo$: Observable<any[]>;
+  updatingData = false;
+  beingUpdatedData = {};
+  newObj = {id: '', name: '', age: 0, nat: ''};
 
   constructor(private db: AngularFirestore) {
       this.todoCollectionRef = this.db.collection<Todo>('items');
@@ -30,7 +33,7 @@ export class AppComponent implements OnInit {
       // this.todoCollectionRef = this.db.collection<Todo>('items', ref => ref.where('name', '==', 'marcos'));
       this.todo$ = this.todoCollectionRef.snapshotChanges().map(actions => {
         return actions.map(action => {
-          const data = action.payload.doc.data() as Todo;
+          const data = action.payload.doc.data();
           const id = action.payload.doc.id;
           return { id, data };
         });
@@ -41,6 +44,29 @@ export class AppComponent implements OnInit {
     if (todoDesc && todoDesc.trim().length) {
       this.todoCollectionRef.add({ name: todoDesc, age: 20, nat: 'De' });
     }
+  }
+
+  edit(item) {
+    this.beingUpdatedData = item;
+    this.newObj.id = item.id;
+    this.newObj.name = item.data.name;
+    this.newObj.age = item.data.age;
+    this.newObj.nat = item.data.nat;
+    this.updatingData = true;
+  }
+
+  saveChanges(newObj) {
+    this.todoCollectionRef.doc(newObj.id).update({ name: newObj.name.toString(), age: Number(newObj.age), nat: newObj.nat.toString() });
+    this.newObj.name = '';
+    this.newObj.age = 0;
+    this.newObj.nat = '';
+    this.updatingData = false;
+  }
+  close() {
+    this.newObj.name = '';
+    this.newObj.age = 0;
+    this.newObj.nat = '';
+    this.updatingData = false;
   }
 
   updateTodo(todo: Todo) {
