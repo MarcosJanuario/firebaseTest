@@ -18,10 +18,16 @@ export interface Todo {
 
 export class AppComponent implements OnInit {
   todoCollectionRef: AngularFirestoreCollection<Todo>;
-  todo$: Observable<Todo[]>;
+  todo$: Observable<any[]>;
 
   constructor(private db: AngularFirestore) {
       this.todoCollectionRef = this.db.collection<Todo>('items');
+
+      /**
+       * The line bellow is used to  query date from the firebase database by using such clauses as "where" for instance
+       * it can be used to replace the code line above
+       **/
+      // this.todoCollectionRef = this.db.collection<Todo>('items', ref => ref.where('name', '==', 'marcos'));
       this.todo$ = this.todoCollectionRef.snapshotChanges().map(actions => {
         return actions.map(action => {
           const data = action.payload.doc.data() as Todo;
