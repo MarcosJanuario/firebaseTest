@@ -20,7 +20,9 @@ export class AppComponent implements OnInit {
   todoCollectionRef: AngularFirestoreCollection<Todo>;
   todo$: Observable<any[]>;
   updatingData = false;
+  creatingDate = false;
   beingUpdatedData = {};
+  updatingObj = {id: '', name: '', age: 0, nat: ''};
   newObj = {id: '', name: '', age: 0, nat: ''};
 
   constructor(private db: AngularFirestore) {
@@ -40,32 +42,36 @@ export class AppComponent implements OnInit {
       });
   }
 
-  addTodo(todoDesc: string) {
-    if (todoDesc && todoDesc.trim().length) {
-      this.todoCollectionRef.add({ name: todoDesc, age: 20, nat: 'De' });
-    }
+  addNewData(todoDesc: string) {
+    this.creatingDate = true;
   }
 
   edit(item) {
     this.beingUpdatedData = item;
-    this.newObj.id = item.id;
-    this.newObj.name = item.data.name;
-    this.newObj.age = item.data.age;
-    this.newObj.nat = item.data.nat;
+    this.updatingObj.id = item.id;
+    this.updatingObj.name = item.data.name;
+    this.updatingObj.age = item.data.age;
+    this.updatingObj.nat = item.data.nat;
     this.updatingData = true;
   }
 
-  saveChanges(newObj) {
-    this.todoCollectionRef.doc(newObj.id).update({ name: newObj.name.toString(), age: Number(newObj.age), nat: newObj.nat.toString() });
-    this.newObj.name = '';
-    this.newObj.age = 0;
-    this.newObj.nat = '';
-    this.updatingData = false;
+  saveChanges(updatingObj, updating) {
+    if (updating) {
+      this.todoCollectionRef.doc(updatingObj.id).update({ name: updatingObj.name.toString(), age: Number(updatingObj.age), nat: updatingObj.nat.toString() });
+      this.updatingObj.name = '';
+      this.updatingObj.age = 0;
+      this.updatingObj.nat = '';
+      this.updatingData = false;
+    } else {
+      this.todoCollectionRef.add({ name: updatingObj.name, age: updatingObj.age, nat: updatingObj.nat });
+      this.creatingDate = false;
+    }
   }
+
   close() {
-    this.newObj.name = '';
-    this.newObj.age = 0;
-    this.newObj.nat = '';
+    this.updatingObj.name = '';
+    this.updatingObj.age = 0;
+    this.updatingObj.nat = '';
     this.updatingData = false;
   }
 

@@ -6,12 +6,12 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: '<your-key>',
-    authDomain: '<your-project-authdomain>',
-    databaseURL: '<your-database-URL>',
-    projectId: '<your-project-id>',
-    storageBucket: '<your-storage-bucket>',
-    messagingSenderId: '<your-messaging-sender-id>'
+    apiKey: "AIzaSyC-uWoYlJx9_-oyQEk89Il8vvVa33gx-zY",
+    authDomain: "angular-4-test-02.firebaseapp.com",
+    databaseURL: "https://angular-4-test-02.firebaseio.com",
+    projectId: "angular-4-test-02",
+    storageBucket: "angular-4-test-02.appspot.com",
+    messagingSenderId: "758954026777"
   }
 };
 

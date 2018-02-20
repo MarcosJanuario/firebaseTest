@@ -7,14 +7,24 @@
   </li>
 </ul>
 
-<button (click)="addTodo('marcos')">add</button>
+<button (click)="addNewData()">add</button>
 
 <div *ngIf="updatingData"
+     style="position: absolute; top: 0px; left: 0px; width: 220px; height: 220px; background: lightskyblue; margin-left: 50%; margin-top: 10%">
+  <p><label for="">name:</label><input type="text" name="name" [(ngModel)]="updatingObj.name" ></p>
+  <p><label for="">age:</label><input type="number" name="age" [(ngModel)]="updatingObj.age"></p>
+  <p><label for="">nat:</label><input type="text" name="nat" [(ngModel)]="updatingObj.nat"></p>
+  <hr>
+  <button (click)="saveChanges(updatingObj, true)">Save</button>
+  <button (click)="close()">close</button>
+</div>
+
+<div *ngIf="creatingDate"
      style="position: absolute; top: 0px; left: 0px; width: 220px; height: 220px; background: lightskyblue; margin-left: 50%; margin-top: 10%">
   <p><label for="">name:</label><input type="text" name="name" [(ngModel)]="newObj.name" ></p>
   <p><label for="">age:</label><input type="number" name="age" [(ngModel)]="newObj.age"></p>
   <p><label for="">nat:</label><input type="text" name="nat" [(ngModel)]="newObj.nat"></p>
   <hr>
-  <button (click)="saveChanges(newObj)">Save</button>
+  <button (click)="saveChanges(newObj, false)">Save</button>
   <button (click)="close()">close</button>
 </div>
